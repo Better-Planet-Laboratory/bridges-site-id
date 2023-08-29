@@ -13,15 +13,20 @@ With this repository, users can leverage a robust set of tools and models to add
 This section outlines the functionality of the different scripts included in the repository:
 
 1. `main.py`: Extracts features for positive labels (known bridge sites) and negative labels (randomly selected waterway points) across the area covered by bridge sites.
-2. `train_test.py`: Performs a grid search across various models with the train/test dataset of features plus labels obtained from `main.py`, selects optimal parameters, and calculates performance metrics.
-3. `main_extended.py` and `train_test_extended.py`: Extended versions of the above scripts that augment the training set by adding points to both sides of the label-coordinates, with downweighting based on distance.
+2. `traintest.py`: Performs a grid search across various models with the train/test dataset of features plus labels obtained from `main.py`, selects optimal parameters, and calculates performance metrics. Also provides comprehensive analysis tools, including partial dependence plots, feature importances, leave-one-out cross-validation, and spatial error distribution visualization.
+3. `main_extended.py` and `traintest_extended.py`: Extended versions of the above scripts that augment the training set by adding points to both sides of the label-coordinates, with downweighting based on distance.
 4. `deployment.py`: Takes trained classifiers and deploys the model to all segments of waterways in a specified region.
-5. `performance_analysis.py`: Provides comprehensive analysis tools, including partial dependence plots, feature importances, leave-one-out cross-validation, and spatial error distribution visualization.
-6. `performance_plots.py`: Reads performance metrics, generates, and saves comparison plots.
-7. `linestrings_to_points.py`: Densifies waterway linestrings and extracts points at chosen regular intervals.
-8. `eliminate_bridges_outof_ww.py`: Filters out bridges that are not in or close to waterways, enhancing the quality of the training data.
-9. `get_osm_data.py`: Retrieves bridge sites, schools, and health centres data from OpenStreetMap (OSM).
-10. `raster_processing.py`: Sets a consistent extent and resolution for different rasters within a country, and merges elevation rasters.
+5. `performance_plots.py`: Reads performance metrics, generates, and saves comparison plots.
+6. `linestrings_to_points.py`: Densifies waterway linestrings and extracts points at chosen regular intervals.
+7. `eliminate_bridges_outof_ww.py`: Filters out bridges that are not in or close to waterways, enhancing the quality of the training data.
+8. `osm_queries.py`: Retrieves bridge sites, schools, and health centres data from OpenStreetMap (OSM).
+9. `tools.py`: Provides utility functions to perform the following tasks:
+   - Convert the parquet files for bridges, footpaths, and waterways into raster files.
+   - Compute the coordinates for high-population centers.
+   - Compute a dictionary of adjacent polygons.
+   - Merge elevation rasters for consistent analysis.
+   - Set the same extent and resolution for different rasters, ensuring data consistency.
+
 
 Each script contributes a specific functionality to the workflow, encompassing data extraction, model training, deployment, performance analysis, and more. The provided scripts collectively enable the identification of remote bridge sites through a robust and systematic approach.
 
