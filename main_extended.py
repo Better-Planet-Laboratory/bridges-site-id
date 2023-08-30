@@ -15,21 +15,17 @@ import rasterio
 from rasterio.mask import mask
 import random
 
+# Change path to folder
+os.chdir('path_to_folder')
+
 approach = "seventh"
 country = "rwanda"
 folder = "Rwanda"
 approach = "seventh"
 combined = True
 
-# check if combined regions
 if combined:
-    os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/')
     os.chdir('Combined')
-else:
-    os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/')
-    os.chdir(f'{folder}')
-
-if combined:
     # list of folder-country pairs
     folder_country_pairs = [
         ('Rwanda', 'rwanda'),
@@ -46,7 +42,7 @@ if combined:
 
     # loop through folder-country pairs
     for folder, country in folder_country_pairs:
-        folder_path = f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}'
+        folder_path = os.getcwd()
         os.chdir(folder_path)
 
         # read subregions
@@ -79,6 +75,7 @@ if combined:
     ww = gpd.GeoDataFrame(pd.concat(ww_gdfs, ignore_index=True))
 
 else:
+    os.chdir(f'{folder}')
     # subregion polygons
     subregions = pd.read_parquet(f'{country}_subregions.parquet')
     # read the "subregions" dataframe
@@ -241,7 +238,7 @@ elevation_rasters = []
 if combined:
     # loop through folder-country pairs
     for folder, country in folder_country_pairs:
-        folder_path = f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}'
+        folder_path = os.getcwd()
         os.chdir(folder_path)
 
         # read footpaths
@@ -438,10 +435,10 @@ random.seed(42)
 all_admin_units = gpd.GeoDataFrame()
 if combined:
     for folder, country in folder_country_pairs:
-        admin_units_gdf = gpd.read_file(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}/{country}_admin_boundaries/{country}_admin_2.shp')
+        admin_units_gdf = gpd.read_file(f'/{country}_admin_boundaries/{country}_admin_2.shp')
         all_admin_units = pd.concat([all_admin_units, admin_units_gdf], ignore_index=True)
 else:
-    all_admin_units = gpd.read_file(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}/{country}_admin_boundaries/{country}_admin_2.shp')
+    all_admin_units = gpd.read_file(f'/{country}_admin_boundaries/{country}_admin_2.shp')
 
 bridges_with_units = gpd.sjoin(bridges_gdf, all_admin_units, predicate='within')
 bridge_counts = bridges_with_units.groupby('NAME_2').size()
@@ -482,7 +479,7 @@ while len(sampled_points) < 3000:
 # create a new GeoDataFrame with the sampled Point geometries
 ww_gdf = gpd.GeoDataFrame(geometry=sampled_points, crs=ww.crs)
 
-ww_gdf.to_file(filename=f"/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/Combined/Shapefiles/ww_sampled.shp", driver="ESRI Shapefile")
+ww_gdf.to_file(filename=f"/Shapefiles/ww_sampled.shp", driver="ESRI Shapefile")
 
 # ---------- Extend the ww dataset by adding ------------
 # ---------- surrounding couples of points --------------
