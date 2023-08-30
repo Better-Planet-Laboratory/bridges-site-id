@@ -16,12 +16,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from pyproj import CRS
 
+# Set path
+os.chdir('path_to_folder')
 
 approach = "seventh"
 country = "rwanda"
 folder = "Rwanda"
-
-os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}')
+os.chdir(f'/{folder}')
 
 # ww points
 ww = gpd.read_file(f'{country}_waterways_osm_shape/{country}_waterways_osm_shape.shp')
@@ -327,7 +328,6 @@ ww_gdf[["geometry"]].to_file(f"Shapefiles/{country}_deployment_points.shp", driv
 # ----------------------------------------------------
 # load the best classifier and train in all data
 test_prop = 0.2
-os.chdir(f"/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}/")
 with open(f'Saved data/best_params_{approach}_test_size_{test_prop}.pkl', 'rb') as f:
     best_params = pickle.load(f)
 
