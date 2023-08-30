@@ -16,7 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import make_scorer, precision_score, recall_score, f1_score
 
 # Set path
-os.chdir('/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/')
+os.chdir('path_to_folder')
 
 folder = "Rwanda"
 country = "rwanda"
