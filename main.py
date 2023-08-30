@@ -20,12 +20,14 @@ import rasterio
 from rasterio.mask import mask
 import random
 
+# Set path
+os.chdir('path_to_folder')
+
 approach = "sixth"
 country = "rwanda"
 folder = "Rwanda"
 approach = "sixth"
-
-os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}')
+os.chdir(f'/{folder}')
 
 # subregion polygons
 subregions = pd.read_parquet(f'{country}_subregions.parquet')
