@@ -3,12 +3,13 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle
 
+# Set path
+os.chdir(f'path_to_folder')
+
 folder = "Rwanda"
 approach = "seventh"
 drop = 'none'
 test_prop = 0.2
-
-os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/')
 
 with open(f'{folder}/Saved data/performance_{approach}_test_size_{test_prop}_dropped_{drop}.pkl', 'rb') as f:
     performance_df = pickle.load(f)
