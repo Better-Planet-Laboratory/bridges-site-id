@@ -24,8 +24,10 @@ from rasterio.warp import calculate_default_transform, reproject
 
 country = "uganda"  # Replace "rwanda" with the desired country name, e.g., "ethiopia"
 folder = "Uganda"
-mypath = f"/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/"
-os.chdir(f"/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/")
+
+# Set path
+mypath = f"path_to_folder/{folder}/"
+os.chdir(f"path_to_folder/{folder}/")
 
 
 # --------------------- 1. Convert files ---------------------
