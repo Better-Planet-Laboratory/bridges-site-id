@@ -4,10 +4,11 @@ import os
 import geopandas as gpd
 import pandas as pd
 
+# Set path
+os.chdir("path_to_folder")
+
 country = "uganda"  # Replace "rwanda" with the desired country name, e.g., "ethiopia"
 folder = "Uganda"
-
-os.chdir(f"/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/")
 os.chdir(f"{folder}")
 
 ww = gpd.read_file(f'{country}_waterways_osm_shape/{country}_waterways_osm_shape.shp')
