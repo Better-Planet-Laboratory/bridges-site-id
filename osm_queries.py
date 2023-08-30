@@ -7,7 +7,7 @@ import geopandas as gpd
 from shapely.geometry import Point
 
 # Set path
-os.chdir('/Users/naiacasina/Documents/SEM2/B2P/Data/')
+os.chdir('path_to_folder')
 
 folder = "Ethiopia"
 country = "ethiopia"
