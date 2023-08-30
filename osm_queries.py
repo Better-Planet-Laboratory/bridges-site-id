@@ -1,15 +1,17 @@
 # -------
 # Get bridge sites, schools, health centers from OSM using API
 # -------
-
+import os
 import requests
 import geopandas as gpd
 from shapely.geometry import Point
-import json
-from datetime import datetime
+
+# Set path
+os.chdir('/Users/naiacasina/Documents/SEM2/B2P/Data/')
 
 folder = "Ethiopia"
 country = "ethiopia"
+os.chdir(f'{folder}/')
 
 # ------------------------ BRIDGES ------------------------
 # define the Overpass API query
@@ -51,19 +53,15 @@ bridge_points = [Point(lon, lat) for lon, lat in bridge_locations]
 bridge_gdf = gpd.GeoDataFrame(geometry=bridge_points)
 
 # define the output shapefile path
-output_shapefile = f'/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/Shapefiles/bridge_locations.shp'
+output_shapefile = f'Shapefiles/bridge_locations.shp'
 
 # save the GeoDataFrame as a shapefile
 bridge_gdf.to_file(output_shapefile)
 
 
 # ----- PARQUET TO SHAPEFILE ------
-country = "uganda"
-folder = "Uganda"
-output_shapefile = f"/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/Shapefiles/{country}_bridges.shp"
-
 # read the parquet file into a GeoDataFrame
-gdf = gpd.read_parquet(f"/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/{country}_bridges_osm.parquet")
+gdf = gpd.read_parquet(f"/{country}_bridges_osm.parquet")
 gdf['timestamp'] = gdf['timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S')
 # Save the GeoDataFrame as a shapefile
 gdf.to_file(output_shapefile)
@@ -131,7 +129,7 @@ schools_gdf = gpd.GeoDataFrame(
 # set the coordinate reference system (CRS) if known
 schools_gdf.crs = "EPSG:4326"  # WGS84 coordinate system
 
-output_shapefile = f'/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/{country}_education_facilities/education_facilities.shp'
+output_shapefile = f'{country}_education_facilities/education_facilities.shp'
 
 # save the GeoDataFrame to a shapefile
 schools_gdf.to_file(output_shapefile)
@@ -191,7 +189,7 @@ health_centers_gdf = gpd.GeoDataFrame(
 # set the coordinate reference system (CRS) if known
 health_centers_gdf.crs = "EPSG:4326"  # WGS84 coordinate system
 
-output_shapefile = f'/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/{country}_health_facilities/health_facilities.shp'
+output_shapefile = f'{country}_health_facilities/health_facilities.shp'
 
 # save the GeoDataFrame to a shapefile
 health_centers_gdf.to_file(output_shapefile)
@@ -235,7 +233,7 @@ religious_facilities_gdf = gpd.GeoDataFrame(
 
 # set the coordinate reference system (CRS) if known
 religious_facilities_gdf.crs = "EPSG:4326"  # WGS84 coordinate system
-output_shapefile = f'/Users/naiacasina/Documents/SEM2/B2P/Data/{folder}/{country}_religious_facilities/religious_facilities.shp'
+output_shapefile = f'{country}_religious_facilities/religious_facilities.shp'
 
 # save the GeoDataFrame to a shapefile
 religious_facilities_gdf.to_file(output_shapefile)
