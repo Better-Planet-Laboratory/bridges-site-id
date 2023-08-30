@@ -16,12 +16,14 @@ import seaborn as sns
 import os
 import geopandas as gpd
 
+# Set path
+os.chdir('path_to_folder')
+
 folder = "Rwanda"
 country = "rwanda"
 approach = 'sixth'
 drop = "none"  # also: "primary", "secondary", "health", "semi_urban", "bridges", "population", "gdp"
-
-os.chdir(f"/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}/")
+os.chdir(f"/{folder}/")
 
 # import train-test dataframe
 data = pd.read_pickle(f'ML/{approach} approach/train_test_data_{approach}.pickle')
