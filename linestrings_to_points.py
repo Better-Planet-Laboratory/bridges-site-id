@@ -3,12 +3,13 @@ import os
 import pandas as pd
 from shapely import wkb
 
+# Set path
+os.chdir('path_to_folder')
+
 approach = "seventh"
 country = "uganda"
 folder = "Uganda"
 approach = "seventh"
-
-os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/')
 os.chdir(f'{folder}')
 
 gdf = gpd.read_parquet(f'Waterways/{country}_waterways_osm.parquet')
