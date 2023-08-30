@@ -15,16 +15,19 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import make_scorer, precision_score, recall_score, f1_score
 
+# Set path
+os.chdir('/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/')
+
 folder = "Rwanda"
 country = "rwanda"
 approach = 'seventh'
 drop = "none"  # also: "primary", "secondary", "health", "semi_urban", "bridges", "population", "gdp"
-combined = True
+combined = False
 
 if combined:
-    os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/Combined')
+    os.chdir('Combined/')
 else:
-    os.chdir(f'/Users/naiacasina/Library/CloudStorage/OneDrive-UCB-O365/SEM2/B2P/Data/{folder}')
+    os.chdir(f'{folder}/')
 
 # import train-test dataframe
 data = pd.read_pickle(f'ML/{approach} approach/train_test_data_{approach}_combined_{combined}.pickle')
@@ -34,10 +37,24 @@ inf_rows = data.isin([np.inf, -np.inf]).any(axis=1)
 data = data[~inf_rows].copy()
 data['elev_perc_dif'] = data['elev_p75'] - data['elev_p25']
 
+X = data.drop(columns=['label', 'geometry', 'nearest_distance_bridge', 'weight'])
+
 # normalize the numerical features
+columns_to_normalize = [
+    'delta_time_df_primary_schools', 'max_time_df_primary_schools',
+    'delta_time_df_secondary_schools','max_time_df_secondary_schools',
+    'delta_time_df_health_centers', 'max_time_df_health_centers',
+    'delta_time_df_semi_dense_urban','max_time_df_semi_dense_urban',
+    'nearest_distance_footpath','nearest_distance_bridge',
+    'pop_total','elevation_difference','elev_p25', 'elev_p50',
+    'elev_p75','terrain_ruggedness','max_gdp', 'mean_gdp','elev_perc_dif'
+]
+
+# Create a MinMaxScaler instance
 scaler = MinMaxScaler()
-X = data.drop(['label', 'geometry', 'nearest_distance_bridge', 'weight'], axis=1)
-X_normalized = scaler.fit_transform(X)
+# Normalize the selected columns
+data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
+
 
 # separate instances with 'weight' == 1 and 'weight' != 1
 data_weighted = data[data['weight'] == 1]
@@ -50,10 +67,6 @@ X_train_partial, X_test_partial, y_train_partial, y_test_partial = train_test_sp
 # create X_train_all and y_train_all excluding the instances in X_test_partial
 X_train_all = pd.concat([data_non_weighted.drop(['label', 'geometry', 'nearest_distance_bridge', 'weight'], axis=1), data_weighted.drop(['label', 'geometry', 'nearest_distance_bridge', 'weight'], axis=1)]).drop(X_test_partial.index)
 y_train_all = pd.concat([data_non_weighted['label'], data_weighted['label']]).drop(X_test_partial.index)
-
-# normalize the training and testing features
-X_train_normalized = scaler.transform(X_train_all)
-X_test_normalized_partial = scaler.transform(X_test_partial)
 
 # define the custom scoring metric
 scoring = {'Precision': make_scorer(precision_score), 'Recall': make_scorer(recall_score),
@@ -91,17 +104,17 @@ for name, clf, param_grid in classifiers:
 
     # perform grid search with cross-validation
     grid_search = GridSearchCV(clf, param_grid=param_grid, cv=5, scoring=scoring, refit='f1_score')
-    grid_search.fit(X_train_normalized, y_train_all, sample_weight=train_weights)  # Use train_weights here
+    grid_search.fit(X_train_all, y_train_all, sample_weight=train_weights)  # Use train_weights here
 
     # use the best estimator from the grid search
     best_clf = grid_search.best_estimator_
     best_params[name] = grid_search.best_params_
 
     # perform cross-validation on the best estimator
-    cv_scores = cross_val_score(best_clf, X_train_normalized, y_train_all, cv=5)
+    cv_scores = cross_val_score(best_clf, X_train_all, y_train_all, cv=5)
 
     # make predictions on the test set
-    y_pred = best_clf.predict(X_test_normalized_partial)
+    y_pred = best_clf.predict(X_test_partial)
 
     accuracy = accuracy_score(y_test_partial, y_pred)
     recall = recall_score(y_test_partial, y_pred)
@@ -153,7 +166,7 @@ for i, (name, clf, param_grid) in enumerate(classifiers):
 
         # create an instance of the classifier with the best parameters
         clf_best = clf.set_params(**best_params_clf)
-        clf_best.fit(X_train_normalized, y_train_all)
+        clf_best.fit(X_train_all, y_train_all)
         feature_importances = clf_best.feature_importances_
         feature_names = X.columns
 
@@ -197,10 +210,10 @@ for i, (name, clf, param_grid) in enumerate(classifiers):
     best_params_clf = best_params[name]
     # create an instance of the classifier with the best parameters
     clf_best = clf.set_params(**best_params_clf)
-    clf_best.fit(X_train_normalized, y_train_all)
+    clf_best.fit(X_train_all, y_train_all)
 
     # predict class probabilities on the entire dataset
-    y_pred_proba = clf_best.predict_proba(X_train_normalized)[:, 1]
+    y_pred_proba = clf_best.predict_proba(X_train_all)[:, 1]
 
     # calculate the absolute error for each instance
     absolute_error = np.abs(y_train_all - y_pred_proba)
