@@ -70,3 +70,7 @@ Upon running the scripts, the repository generates several key output files that
      - Sampled Waterway Points: Sampled points from waterways for model input.
     
 *country_name* can be changed by *combined*, which takes into account the merger of training points from several full-covered regions. So far, the whole country of Rwanda and Kabarole, Kasese, Ibanda, & Bundibugyo districts of Uganda.
+
+Point probability predictions for Rwanda. Example:
+
+![image](https://github.com/Better-Planet-Laboratory/bridges-site-id/assets/43005056/31196d32-6dbc-4437-9c35-f699e184826d)
